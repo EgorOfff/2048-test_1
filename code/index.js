@@ -31,16 +31,25 @@ document.addEventListener('DOMContentLoaded', function () {
     gameLoop();
 
     function openGame() {
-        ctx.clearRect(0, 0, GAME_HEIGHT, GAME_HEIGHT);
         const myReq = requestAnimationFrame(gameLoop);
+        ctx.clearRect(0, 0, GAME_HEIGHT, GAME_HEIGHT);
         game.currentScore = 0;
         game.addCell();
         game.addCell();
     }
 
-    function gameLoop(timeStamp) {
-        console.log(game.moveCellEnd);
+    function newGame() {
+        currentScoreCtx.clearRect(130, 0, 100, 100);
+        game.currentScore = 0;
+        ctx.clearRect(0, 0, GAME_HEIGHT, GAME_HEIGHT);
+        game.gameMovingObjects = [];
+        game.gameOverBool = false;
+        game.addCell();
+        game.addCell();
+        gameLoop();
+    }
 
+    function gameLoop(timeStamp) {
         let deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
         currentScoreCtx.clearRect(130, 0, 100, 100);
@@ -49,17 +58,14 @@ document.addEventListener('DOMContentLoaded', function () {
         game.update(deltaTime);
         game.draw(ctx, currentScoreCtx);
         const myReq = requestAnimationFrame(gameLoop);
+        if (game.checkWin()) {
+            alert('Уровень пройден');
+            newGame();
 
-        if (game.checkGameOver()) {
+        }
+        else if (game.checkGameOver()) {
             alert('Нельзя сделать ход');
-            ctx.clearRect(0, 0, GAME_HEIGHT, GAME_HEIGHT);
-            currentScoreCtx.clearRect(130, 0, 100, 100);
-            game.currentScore = 0;
-            game.gameMovingObjects = [];
-            game.gameOverBool = false;
-            game.addCell();
-            game.addCell();
-            gameLoop();
+            newGame();
         }
     }
 })

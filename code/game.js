@@ -170,6 +170,12 @@ export class Game {
         return rows;
     }
 
+    checkWin() {
+        if (this.gameMovingObjects.some(item => { return item.value === 2048 })) {
+            return true;
+        }
+        return false;
+    }
 
     checkGameOver() {
         let rows = this.getAllRows();
@@ -180,9 +186,7 @@ export class Game {
             this.gameOverBool = false;
         }
 
-        if (this.gameMovingObjects.some(item => { return item.value === 2048 })) {
-            this.gameOverBool = true;
-        }
+
         rows.forEach(row => {
             row.sort((cell1, cell2) => cell1.position.x - cell2.position.x);
             if (this.hasConsecutiveEqualValues(row)) {
